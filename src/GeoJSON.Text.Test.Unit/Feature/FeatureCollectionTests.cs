@@ -134,7 +134,7 @@ public class FeatureCollectionTests : TestBase
             var actualId = actualFeature.Id;
             var actualIndex = model.Features.IndexOf(actualFeature);
 
-            var expectedId = expectedIds[i];
+            FeatureId expectedId = expectedIds[i];
             var expectedIndex = expectedIndexes[i];
 
             Assert.AreEqual(expectedId, actualId);

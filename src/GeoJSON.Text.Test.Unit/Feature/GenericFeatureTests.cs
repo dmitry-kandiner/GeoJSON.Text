@@ -26,7 +26,7 @@ namespace GeoJSON.Text.Tests.Feature
             string name = feature.Properties["name"].ToString();
             Assert.AreEqual("Dinagat Islands", name);
 
-            Assert.AreEqual("test-id", feature.Id);
+            Assert.AreEqual((FeatureId)"test-id", feature.Id);
 
             Assert.AreEqual(GeoJSONObjectType.Point, feature.Geometry.Type);
             Assert.AreEqual(125.6, feature.Geometry.Coordinates.Longitude);
@@ -47,7 +47,7 @@ namespace GeoJSON.Text.Tests.Feature
             Assert.IsTrue(feature.Properties.ContainsKey("name"));
             Assert.AreEqual("Dinagat Islands", feature.Properties["name"].ToString());
 
-            Assert.AreEqual("test-id", feature.Id);
+            Assert.AreEqual((FeatureId)"test-id", feature.Id);
 
             Assert.AreEqual(GeoJSONObjectType.LineString, feature.Geometry.Type);
 
@@ -103,7 +103,7 @@ namespace GeoJSON.Text.Tests.Feature
             Assert.AreEqual(feature.Properties.Name, "Dinagat Islands");
             Assert.AreEqual(feature.Properties.Value, 4.2);
 
-            Assert.AreEqual(feature.Id, "test-id");
+            Assert.AreEqual(feature.Id, (FeatureId)"test-id");
 
             Assert.AreEqual(feature.Geometry.Type, GeoJSONObjectType.Point);
         }
