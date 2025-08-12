@@ -21,7 +21,7 @@ namespace GeoJSON.Text.Feature
     public class Feature<TGeometry, TProps> : GeoJSONObject, IEquatable<Feature<TGeometry, TProps>>
         where TGeometry : IGeometryObject
     {
-        private string _id;
+        private FeatureId _id;
         private bool _idHasValue = false;
         private TGeometry _geometry;
         private bool _geometryHasValue = false;
@@ -33,14 +33,14 @@ namespace GeoJSON.Text.Feature
 
         }
 
-        public Feature(TGeometry geometry, TProps properties, string id = null)
+        public Feature(TGeometry geometry, TProps properties, FeatureId id = null)
         {
             Geometry = geometry;
             Properties = properties;
             Id = id;
         }
 
-        public Feature(IGeometryObject geometry, TProps properties, string id = null)
+        public Feature(IGeometryObject geometry, TProps properties, FeatureId id = null)
         {
             Geometry = (TGeometry)geometry;
             Properties = properties;
@@ -53,7 +53,8 @@ namespace GeoJSON.Text.Feature
 
         [JsonPropertyName( "id")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Id { 
+        [JsonConverter(typeof(FeatureIdConverter))]
+        public FeatureId Id { 
             get
             {
                 return _id;
@@ -195,12 +196,12 @@ namespace GeoJSON.Text.Feature
 
         }
 
-        public Feature(IGeometryObject geometry, IDictionary<string, object> properties = null, string id = null)
+        public Feature(IGeometryObject geometry, IDictionary<string, object> properties = null, FeatureId id = null)
             : base(geometry, properties, id)
         {
         }
 
-        public Feature(IGeometryObject geometry, object properties, string id = null)
+        public Feature(IGeometryObject geometry, object properties, FeatureId id = null)
             : base(geometry, properties, id)
         {
         }
@@ -225,7 +226,7 @@ namespace GeoJSON.Text.Feature
         /// <param name="geometry">The Geometry Object.</param>
         /// <param name="properties">The properties.</param>
         /// <param name="id">The (optional) identifier.</param>
-        public Feature(TGeometry geometry, IDictionary<string, object> properties = null, string id = null)
+        public Feature(TGeometry geometry, IDictionary<string, object> properties = null, FeatureId id = null)
         : base(geometry, properties ?? new Dictionary<string, object>(), id)
         {
         }
@@ -236,7 +237,7 @@ namespace GeoJSON.Text.Feature
         /// <param name="geometry">The Geometry Object.</param>
         /// <param name="properties">The properties.</param>
         /// <param name="id">The (optional) identifier.</param>
-        public Feature(IGeometryObject geometry, IDictionary<string, object> properties = null, string id = null)
+        public Feature(IGeometryObject geometry, IDictionary<string, object> properties = null, FeatureId id = null)
         : base((TGeometry)geometry, properties ?? new Dictionary<string, object>(), id)
         {
         }
@@ -250,7 +251,7 @@ namespace GeoJSON.Text.Feature
         /// properties
         /// </param>
         /// <param name="id">The (optional) identifier.</param>
-        public Feature(TGeometry geometry, object properties, string id = null)
+        public Feature(TGeometry geometry, object properties, FeatureId id = null)
         : this(geometry, GetDictionaryOfPublicProperties(properties), id)
         {
         }
@@ -312,5 +313,32 @@ namespace GeoJSON.Text.Feature
         {
             return !(left?.Equals(right) ?? right is null);
         }
+    }
+
+    public sealed class FeatureId : IEquatable<FeatureId>
+    {
+        private readonly string _strId;
+        private readonly ulong? _numId;
+
+        private FeatureId(string str, ulong? num) => (_strId, _numId) = (str, num);
+
+        public static implicit operator FeatureId(string str) => new(str, null);
+        public static implicit operator FeatureId(ulong num) => new(null, num);
+
+        public bool IsNumeric => _numId.HasValue;
+        public bool IsString => !IsNumeric;
+
+        public static implicit operator string(FeatureId id) => id.IsString ? id._strId : throw new InvalidCastException();
+        public static implicit operator ulong(FeatureId id) => id.IsNumeric ? id._numId.Value : throw new InvalidCastException();
+
+        public override int GetHashCode() => (_strId.GetHashCode() * 397) ^ _numId.GetHashCode();
+
+        public bool Equals(FeatureId other) => _strId == other._strId && _numId == other._numId;
+
+        public override bool Equals(object obj) => obj is FeatureId id && Equals(id);
+
+        public static bool operator ==(FeatureId left, FeatureId right) => left.Equals(right);
+
+        public static bool operator !=(FeatureId left, FeatureId right) => !(left == right);
     }
 }

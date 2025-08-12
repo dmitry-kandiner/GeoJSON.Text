@@ -39,6 +39,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Feature\FeatureCollectionTests_Can_Deserialize.json" />
     <EmbeddedResource Include="Feature\FeatureCollectionTests_Can_DeserializeGeneric.json" />
+    <EmbeddedResource Include="Feature\FeatureTests_Can_Deserialize_Point_Feature_With_Numeric_Id.json" />
     <EmbeddedResource Include="Feature\FeatureTests_Can_Deserialize_Point_Feature.json" />
     <EmbeddedResource Include="Feature\FeatureTests_Can_Serialize_Dictionary_Subclass.json" />
     <EmbeddedResource Include="Feature\FeatureTests_Can_Serialize_LineString_Feature.json" />
