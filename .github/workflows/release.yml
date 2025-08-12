@@ -21,7 +21,7 @@ jobs:
   deploy:
     name: 'Deploy to Nuget'
     if: github.event_name == 'release'
-    runs-on: windows-2019
+    runs-on: windows-2025
 
     steps:
       - name: Validate release version
